@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UniMatch</title>
+<style>
+  :root{
+    --bg:#f2f5f5;
+    --card:#ffffff;
+    --ink:#1d2a2e;
+    --muted:#6b7a80;
+    --accent:#4aa5a6;   /* 메인 청록색 */
+    --accent-2:#9db8bd; /* 보조 청록+회색 */
+    --border:#dde4e6;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+    line-height:1.5;
+  }
+  a{color:inherit; text-decoration:none}
+  .container{max-width:1200px; margin:0 auto; padding:0 16px}
+
+  /* Topbar */
+  .topbar{
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    display:grid; grid-template-columns: 180px 1fr 200px; gap:12px;
+    align-items:center; padding:12px 0;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px;
+  }
+  .brand .logo{
+    width:36px; height:36px; border-radius:9px; background:var(--accent);
+    display:grid; place-items:center; color:#fff; font-weight:900;
+    position:relative; overflow:hidden;
+  }
+  .brand .logo::after{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(40px 40px at 20% 20%, rgba(255,255,255,.35), transparent 60%);
+  }
+  .search{
+    display:flex; align-items:center; gap:10px; border:1px solid var(--border); border-radius:999px;
+    padding:8px 14px; background:#fff;
+  }
+  .search input{border:0; outline:0; width:100%; font-size:14px}
+  .search svg{opacity:.7}
+  .actions{
+    display:flex; justify-content:flex-end; align-items:center; gap:12px; color:var(--muted); font-size:14px;
+  }
+  .chatbot-badge{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+    background:#eef6f6; color:#2b6869; border:1px solid #d6ecec; font-weight:600;
+  }
+
+  /* Second row: nav + hamburger + profile */
+  .subbar{
+    background:var(--card); border-bottom:1px solid var(--border);
+  }
+  .subbar-inner{
+    display:grid; grid-template-columns: 56px 1fr 56px; gap:12px; align-items:center; padding:10px 0;
+  }
+  .hamburger, .profile{
+    width:44px; height:44px; border-radius:10px; border:1px solid var(--border); background:#fff;
+    display:grid; place-items:center; cursor:pointer;
+  }
+  .tabs{
+    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  }
+  .tab{
+    padding:10px 14px; background:#f4f8f8; border:1px solid var(--border);
+    border-radius:12px; color:#2b3b40; font-weight:600;
+  }
+  .tab.active{background:#e9f4f4; border-color:#d6ecec; color:#205b5c}
+
+  /* Grid Layout (two rows of cards) */
+  .grid{display:grid; gap:16px; padding:16px 0}
+  .row{display:grid; gap:16px; grid-template-columns: 1.2fr 2fr 1fr;}
+
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; position:relative; overflow:hidden;
+    box-shadow:0 1px 0 rgba(0,0,0,.02);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .card:hover{transform:translateY(-2px); box-shadow:0 6px 24px rgba(0,0,0,.06);}
+
+  /* Hero center banner */
+  .center-logos{
+    display:flex; align-items:center; justify-content:center; gap:22px; flex-wrap:wrap; padding:8px 0 12px;
+  }
+  .center-logos img{height:54px; width:auto; object-fit:contain; filter:saturate(.5);}
+  .hero-title{font-size:22px; font-weight:800; text-align:center; margin:6px 0 4px;}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 16px;
+    background:#6fbdbd; color:#fff; border:0; border-radius:12px; font-weight:800; cursor:pointer;
+    box-shadow:0 6px 0 rgba(0,0,0,.06) inset;
+  }
+  .btn.alt{
+    background:#8fbfc5;
+  }
+  .btn.small{padding:8px 10px; font-weight:700; font-size:13px; border-radius:10px}
+  .ghost{
+    background:#eef6f6; color:#2b6869; border:1px solid #d6ecec;
+  }
+
+  /* Left card — big CTA style */
+  .left-cta{
+    display:grid; grid-template-columns: 1fr; gap:10px; height:100%;
+    background:linear-gradient(180deg, #e7f3f3, #f7fbfb);
+  }
+  .left-cta .big{
+    font-size:18px; font-weight:900; color:#1b6161; line-height:1.2;
+  }
+
+  /* Right login card */
+  .login-card .hello{
+    font-weight:800; color:#1a6162; font-size:18px; margin-bottom:10px;
+  }
+  .login-card .avatar{
+    width:64px; height:64px; border-radius:999px; display:grid; place-items:center; margin:6px auto 10px;
+    background:#e8f4f4; border:1px solid #d6ecec; color:#2b6869; font-weight:800; font-size:22px;
+  }
+  .login-card .links{
+    display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; color:var(--muted); font-size:13px;
+  }
+
+  /* Second row cards */
+  .roadmap{
+    display:grid; grid-template-columns: 1.1fr 1.2fr; gap:16px; align-items:center; height:100%;
+    background:linear-gradient(180deg,#e3f0f0,#f9fcfc);
+  }
+  .roadmap .title{
+    font-size:42px; font-weight:900; letter-spacing:2px; color:#1a6162; line-height:1;
+  }
+  .roadmap .desc{color:#2e5255; font-weight:600}
+  .pill{display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; background:#cee6e6; color:#275c5d; font-weight:700}
+
+  .dept-card .icon{
+    width:56px; height:56px; border-radius:14px; display:grid; place-items:center; background:#e9f4f4; color:#285c5d; margin-bottom:4px;
+  }
+  .dept-card .btn{background:#64b0b1}
+
+  /* Image upload button */
+  .img-upload{
+    position:absolute; right:10px; bottom:10px; z-index:3;
+  }
+  input[type="file"]{display:none}
+
+  /* Tiny animation */
+  .fade{opacity:0; transform:translateY(8px);}
+  .show{opacity:1; transform:none; transition:opacity .6s ease, transform .6s ease;}
+
+  /* Responsive */
+  @media (max-width: 1080px){
+    .row{grid-template-columns: 1fr}
+  }
+</style>
+</head>
+<body>
+  <!-- ===== Topbar ===== -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-label="UniMatch">📘</div>
+        <div>uni<br><strong>Match</strong></div>
+      </div>
+      <label class="search" aria-label="검색">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-3.5-3.5m1-5.5A7 7 0 1 1 4 12a7 7 0 0 1 14 0Z" stroke="#456" stroke-width="2" stroke-linecap="round"/></svg>
+        <input placeholder="검색어를 입력해주세요" />
+      </label>
+      <div class="actions">
+        <span class="chatbot-badge">🤖 chat <strong>bot</strong></span>
+        <a href="#">로그인</a> | <a href="#">회원가입</a> | <a href="#">유니맵</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Subbar ===== -->
+  <div class="subbar">
+    <div class="container subbar-inner">
+      <button class="hamburger" aria-label="메뉴">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="#456" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <nav class="tabs" aria-label="탭">
+        <a class="tab active" href="#">학교별 탐색</a>
+        <a class="tab" href="#">학과별 탐색</a>
+        <a class="tab" href="#">진학 로드맵</a>
+        <a class="tab" href="#">My Path</a>
+      </nav>
+      <button class="profile" aria-label="프로필">
+        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4Z" fill="#456"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Main Grid ===== -->
+  <main class="container grid">
+    <!-- Row 1 -->
+    <section class="row fade">
+      <!-- Left: 학교별 탐색 -->
+      <article class="card left-cta" id="card-left">
+        <div style="display:flex; align-items:center; gap:12px">
+          <div class="icon" style="width:56px;height:56px;border-radius:14px;display:grid;place-items:center;background:#e9f4f4;color:#285c5d">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M10 20H4a1 1 0 0 1-1-1v-7l7-5 7 5v7a1 1 0 0 1-1 1h-6Z" stroke="#285c5d" stroke-width="2"/><circle cx="18" cy="8" r="3" stroke="#285c5d" stroke-width="2"/></svg>
+          </div>
+          <button class="btn">학교별 탐색</button>
+        </div>
+        <p class="muted" style="color:#3b6d6f;font-weight:700;margin:8px 0 0">원하는 대학·학과, 필요한 과목 한눈에 확인하기</p>
+        <!-- (선택) 왼쪽 카드 이미지 -->
+        <img id="img-left" alt="" style="width:100%;border-radius:12px;margin-top:10px;display:none">
+        <label class="img-upload">
+          <input type="file" accept="image/*" data-target="img-left">
+          <button class="btn small ghost">이미지 변경</button>
+        </label>
+      </article>
+
+      <!-- Center: 로고 배너 -->
+      <article class="card" id="card-center">
+        <div class="center-logos" id="logos">
+          <!-- 기본 자리표시자 4개 -->
+          <img id="logo1" src="https://dummyimage.com/120x54/ccd5d9/5b6b73.png&text=Logo+1" alt="대학 로고 1">
+          <img id="logo2" src="https://dummyimage.com/120x54/d7e1e4/5b6b73.png&text=Logo+2" alt="대학 로고 2">
+          <img id="logo3" src="https://dummyimage.com/120x54/cddfe3/5b6b73.png&text=Logo+3" alt="대학 로고 3">
+          <img id="logo4" src="https://dummyimage.com/120x54/dfe8ea/5b6b73.png&text=Logo+4" alt="대학 로고 4">
+        </div>
+        <h3 class="hero-title">원하는 대학·학과,<br>필요한 과목 한눈에 확인하기</h3>
+
+        <!-- 로고들 교체 -->
+        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:6px">
+          <label class="img-upload">
+            <input type="file" accept="image/*" data-target="logo1">
+            <button class="btn small ghost">로고1</button>
+          </label>
+          <label class="img-upload">
+            <input type="file" accept="image/*" data-target="logo2">
+            <button class="btn small ghost">로고2</button>
+          </label>
+          <label class="img-upload">
+            <input type="file" accept="image/*" data-target="logo3">
+            <button class="btn small ghost">로고3</button>
+          </label>
+          <label class="img-upload">
+            <input type="file" accept="image/*" data-target="logo4">
+            <button class="btn small ghost">로고4</button>
+          </label>
+        </div>
+      </article>
+
+      <!-- Right: 로그인 카드 -->
+      <aside class="card login-card" id="card-login">
+        <div class="hello">만나서 반가워요!</div>
+        <div class="avatar">👤</div>
+        <button class="btn" style="width:100%">로그인</button>
+        <div class="links">
+          <a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a> | <a href="#">회원가입</a>
+        </div>
+        <!-- 프로필 옆 작은 이미지도 교체 가능 -->
+        <img id="img-login" alt="" style="width:100%;border-radius:12px;margin-top:10px;display:none">
+        <label class="img-upload">
+          <input type="file" accept="image/*" data-target="img-login">
+          <button class="btn small ghost">이미지 변경</button>
+        </label>
+      </aside>
+    </section>
+
+    <!-- Row 2 -->
+    <section class="row fade">
+      <!-- Left: 진학 로드맵 큰 카드 -->
+      <article class="card roadmap" id="card-roadmap">
+        <div>
+          <div class="pill">나만의 고교학점제 과목으로 진학 가능 대학/학과 알아보기</div>
+          <div class="title" style="margin:10px 0 6px">진학<br>로드맵</div>
+          <p class="desc">간편한 선택 지금바로 알아보기</p>
+        </div>
+        <div>
+          <img id="img-roadmap" alt="" style="width:100%; border-radius:12px; display:none">
+          <label class="img-upload">
+            <input type="file" accept="image/*" data-target="img-roadmap">
+            <button class="btn small ghost">이미지 변경</button>
+          </label>
+        </div>
+      </article>
+
+      <!-- Center: 중간 작은 카드 -->
+      <article class="card" id="card-mid">
+        <div class="pill" style="margin-bottom:8px">간편한 선택 지금바로 알아보기</div>
+        <img id="img-mid" alt="" style="width:100%; border-radius:12px; display:none">
+        <label class="img-upload">
+          <input type="file" accept="image/*" data-target="img-mid">
+          <button class="btn small ghost">이미지 변경</button>
+        </label>
+      </article>
+
+      <!-- Right: 학과별 탐색 -->
+      <aside class="card dept-card" id="card-dept">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 10 12 6l9 4-9 4-9-4Z" stroke="#285c5d" stroke-width="2"/><path d="M7 12v4.5C9 18 15 18 17 16.5V12" stroke="#285c5d" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div style="font-weight:900; font-size:18px; margin-bottom:6px">학과별, 학교 물어보기</div>
+        <button class="btn" style="width:100%">학과별 탐색</button>
+
+        <img id="img-dept" alt="" style="width:100%; border-radius:12px; margin-top:10px; display:none">
+        <label class="img-upload">
+          <input type="file" accept="image/*" data-target="img-dept">
+          <button class="btn small ghost">이미지 변경</button>
+        </label>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    // 스크롤 페이드인
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }
+      })
+    }, {threshold:.15});
+    document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+
+    // 로컬 이미지 업로드 → 미리보기
+    document.querySelectorAll('input[type="file"][data-target]').forEach(input=>{
+      input.addEventListener('change', ()=>{
+        const targetId = input.dataset.target;
+        const img = document.getElementById(targetId);
+        const file = input.files && input.files[0];
+        if(!file || !img) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          img.src = e.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+</body>
+</html>
