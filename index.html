@@ -75,10 +75,10 @@
 
     /* 하단 3컬럼 */
     .row-3 { display: grid; grid-template-columns: 0.8fr 0.6fr 0.6fr; gap: 18px; margin-top: 18px; }
-    .roadmap { background: var(--teal); color: var(--white); border-radius: var(--radius-xl); padding: 22px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 12px; }
-    .roadmap .title { font-weight: 900; font-size: clamp(32px, 4vw, 56px); line-height: .95; }
+    .roadmap { background: var(--teal); color: var(--white); border-radius: var(--radius-xl); padding: 18px; display: grid; grid-template-columns: 1fr; align-items: center; gap: 12px; }
+    .roadmap .title { font-weight: 900; font-size: clamp(28px, 3.5vw, 48px); line-height: .95; }
     .roadmap .subtitle { font-size: 14px; opacity: .95; margin-bottom: 10px; }
-    .quick, .subject { background: var(--gray-box); border-radius: var(--radius-xl); padding: 18px; display: grid; gap: 14px; align-content: space-between; }
+    .quick, .subject { background: var(--gray-box); border-radius: var(--radius-xl); padding: 18px; display: grid; gap: 10px; align-content: space-between; }
     .quick .title, .subject .title { font-weight: 800; }
     .quick .btn, .subject .cta { justify-self: start; background: var(--teal); color: var(--white); border-radius: 12px; padding: 12px 18px; font-weight: 800; }
 
@@ -186,7 +186,7 @@
       <section class="row-3">
         <article class="roadmap">
           <div>
-            <div class="subtitle">나만의 고교학점제 과목으로 진학 가능 대학/학과 알아보기</div>
+            <div class="subtitle">나만의 고교학점제 과목으로<br>진학 가능 대학/학과 알아보기</div>
             <div class="title">진학<br/>로드맵</div>
           </div>
         </article>
@@ -201,7 +201,7 @@
         <article class="subject">
           <div>
             <!-- # 사진 변경: 돋보기+모자 아이콘 로컬 파일로 교체 -->
-            <img src="./Photo/학과_찾기.png" alt="학과 탐색" style="width:130px; height:100px; margin-bottom:10px;" />
+            <img src="./Photo/학과_찾기.png" alt="학과 탐색" style="width:110px; height:80px; margin-bottom:10px;" />
             <div class="title">학과별, 학교 물어보기</div>
           </div>
           <button class="cta">학과별 탐색</button>
